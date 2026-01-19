@@ -1,47 +1,44 @@
-name: Build and Deploy to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - main  # Change to 'master' if that's your default branch
-
-permissions:
-  contents: write
+      - main
+  pull_request:
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: "18"
 
-      - name: Cache dependencies
-        uses: actions/cache@v4
+      - name: Persist npm cache
+        uses: actions/cache@v3
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
 
-      - name: Cache Eleventy .cache
-        uses: actions/cache@v4
+      - name: Persist Eleventy .cache
+        uses: actions/cache@v3
         with:
           path: ./.cache
           key: ${{ runner.os }}-eleventy-fetch-cache
 
-      - name: Install dependencies
-        run: npm ci
+      - run: npm install
+      - run: npm run build-ghpages
 
-      - name: Build site
-        run: npm run build-ghpages
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_site
