@@ -293,8 +293,9 @@ details[open] summary {
 @media (max-width: 600px) {
     .main {
         width:90% !important;
-        height:90% !important;
+        height:85% !important;
         grid-template-columns: 1fr;
+        grid-template-rows: 200px 1fr;
     }
     .project-photo{
         width: 100%;
@@ -311,11 +312,32 @@ details[open] summary {
         margin-top: 0px;
     }
     .icon{
-        width: 200px;
-        height: 200px;
+        width: 150px;
+        height: 150px;
         display: flex;
         justify-content: center;
         align-items: center;
         margin-top: auto;
+        margin-bottom: auto;
+    }
+    .navbar {
+        height:90%;
+        font-size: small;
+        
+    }
+    .navbar ul {
+        font-size: small;
+    }
+
+    #parent {
+        width: 200px;
+        height: 150px;
+    }
+
+    .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 8px;
     }
 }
