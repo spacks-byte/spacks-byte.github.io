@@ -8,6 +8,8 @@ jobs:
   build-deploy:
     name: Eleventy Build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Git Checkout
         uses: actions/checkout@v2
